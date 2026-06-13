@@ -23,6 +23,17 @@ const PostEditor = () => {
   const categories = ['World', 'Business', 'Technology', 'Science', 'Health', 'Sports', 'Entertainment'];
   const statuses = ['Draft', 'In-review', 'Published', 'Scheduled'];
 
+  const formatDateForInput = (dateString) => {
+    if (!dateString) return '';
+    const d = new Date(dateString);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   useEffect(() => {
     if (isEdit) {
       const fetchPost = async () => {
@@ -34,7 +45,7 @@ const PostEditor = () => {
             content: data.content,
             category: data.category,
             status: data.status,
-            scheduledAt: data.scheduledAt ? new Date(data.scheduledAt).toISOString().slice(0, 16) : ''
+            scheduledAt: formatDateForInput(data.scheduledAt)
           });
           setCurrentImage(data.imageUrl);
         } catch (err) {
@@ -62,7 +73,11 @@ const PostEditor = () => {
 
     const data = new FormData();
     Object.keys(formData).forEach(key => {
-      data.append(key, formData[key]);
+      if (key === 'scheduledAt' && formData[key]) {
+        data.append(key, new Date(formData[key]).toISOString());
+      } else {
+        data.append(key, formData[key]);
+      }
     });
     if (imageFile) {
       data.append('image', imageFile);
