@@ -13,7 +13,7 @@ const sendEmail = async (options) => {
     });
 
     const mailOptions = {
-      from: `"News Portal" <${process.env.SMTP_EMAIL}>`,
+      from: `"News Portal" <${process.env.SMTP_FROM_EMAIL || process.env.SMTP_EMAIL}>`,
       to: options.email,
       subject: options.subject,
       text: options.message,
