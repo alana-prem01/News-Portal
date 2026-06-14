@@ -1,32 +1,22 @@
-const nodemailer = require("nodemailer");
-const dns = require("dns");
+const { Resend } = require("resend");
 
-// Force IPv4 resolution for Node.js 17+ as Render does not support outbound IPv6
-dns.setDefaultResultOrder("ipv4first");
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async (options) => {
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    requireTLS: true,
-    auth: {
-      user: process.env.SMTP_EMAIL,
-      pass: process.env.SMTP_PASSWORD,
-    },
-  });
-
-  await transporter.verify();
-  console.log("SMTP connected successfully");
-
-  const mailOptions = {
-    from: `"News Portal" <${process.env.SMTP_EMAIL}>`,
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-  };
-
-  await transporter.sendMail(mailOptions);
+  try {
+    const data = await resend.emails.send({
+      // IMPORTANT: Replace this with your verified domain email once you add a domain to Resend
+      from: "News Portal <onboarding@resend.dev>",
+      to: [options.email],
+      subject: options.subject,
+      text: options.message,
+    });
+    
+    console.log("Email sent successfully", data);
+  } catch (error) {
+    console.error("Error sending email via Resend:", error);
+    throw error;
+  }
 };
 
 module.exports = sendEmail;
