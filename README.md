@@ -2,7 +2,7 @@
 
 News Portal developed as part of the PENOFT Internship Skill Test.
 
-Frontend: https://news-portal-git-main-alana-prem01s-projects.vercel.app/
+Frontend: https://news-portal-nine-alpha.vercel.app/
 
 Backend API:  https://news-portal-gcq9.onrender.com
 
