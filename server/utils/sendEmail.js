@@ -1,15 +1,16 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
-    family: 4,
+    service: "gmail",
     auth: {
       user: process.env.SMTP_EMAIL,
       pass: process.env.SMTP_PASSWORD,
     },
   });
+
+  await transporter.verify();
+  console.log("SMTP connected successfully");
 
   const mailOptions = {
     from: `"News Portal" <${process.env.SMTP_EMAIL}>`,
@@ -20,7 +21,5 @@ const sendEmail = async (options) => {
 
   await transporter.sendMail(mailOptions);
 };
-
-
 
 module.exports = sendEmail;
